@@ -14,7 +14,7 @@
 
     <!-- Gestione del Cliente: selezione esistente o nuovo -->
     <label for="cliente">Cliente:</label><br>
-    <select id="cliente" name="cliente" required>
+    <select id="cliente" name="cliente">
       <option value="">-- Seleziona Cliente Esistente --</option>
       <?php
       // Connessione al database
@@ -45,34 +45,34 @@
     <div id="client_info" style="display: none;">
       <h3>Inserisci Dati Anagrafici del Cliente</h3>
       <label for="denominazione">Denominazione:</label><br>
-      <input type="text" id="denominazione" name="denominazione" disabled><br><br>
+      <input type="text" id="denominazione" name="denominazione"><br><br>
 
       <label for="indirizzo">Indirizzo:</label><br>
-      <input type="text" id="indirizzo" name="indirizzo" disabled><br><br>
+      <input type="text" id="indirizzo" name="indirizzo"><br><br>
 
       <label for="citta">Città:</label><br>
-      <input type="text" id="citta" name="citta" disabled><br><br>
+      <input type="text" id="citta" name="citta"><br><br>
 
       <label for="cap">CAP:</label><br>
-      <input type="text" id="cap" name="cap" disabled><br><br>
+      <input type="text" id="cap" name="cap" maxlength="5"><br><br>
 
       <label for="nazione">Nazione:</label><br>
-      <input type="text" id="nazione" name="nazione" disabled><br><br>
+      <input type="text" id="nazione" name="nazione"><br><br>
 
       <label for="provincia">Provincia:</label><br>
-      <input type="text" id="provincia" name="provincia" disabled><br><br>
+      <input type="text" id="provincia" name="provincia" maxlength="2"><br><br>
 
       <label for="piva">Partita IVA:</label><br>
-      <input type="text" id="piva" name="piva" disabled><br><br>
+      <input type="text" id="piva" name="piva" maxlength="11"><br><br>
 
       <label for="cf">Codice Fiscale:</label><br>
-      <input type="text" id="cf" name="cf" disabled><br><br>
+      <input type="text" id="cf" name="cf" maxlength="16"><br><br>
 
       <label for="sdi">Codice SDI:</label><br>
-      <input type="text" id="sdi" name="sdi" disabled><br><br>
+      <input type="text" id="sdi" name="sdi" maxlength="7"><br><br>
 
       <label for="pec">PEC:</label><br>
-      <input type="email" id="pec" name="pec" disabled><br><br>
+      <input type="email" id="pec" name="pec" maxlength="50"><br><br>
     </div><br><br>
 
     <label for="tipodoc">Tipo Documento:</label><br>
@@ -104,7 +104,7 @@
     <input type="number" step="0.01" id="importounitario" name="importounitario" required><br><br>
 
     <label for="idiva">Tipo IVA:</label><br>
-    <select id="idiva" name="idiva" required>
+    <select id="idiva" name="idiva">
     <option value="">-- Seleziona Tipo IVA Esistente --</option>
   <?php
   // Connessione al database
@@ -138,11 +138,12 @@
 
     <div id="iva_info" style="display: none;">
     <h3>Inserisci Nuovo Tipo IVA</h3>
-    <label for="descrizione_iva">Descrizione:</label><br>
-    <input type="text" id="descrizione_iva" name="descrizione_iva" disabled><br><br>
 
-    <label for="percentuale">Percentuale:</label><br>
-    <input type="number" step="0.01" id="percentuale" name="percentuale" disabled><br><br>
+    <label for="cod">COD:</label><br>
+    <input type="text" id="cod" name="cod"><br><br>
+
+    <label for="descrizione_iva">Descrizione:</label><br>
+    <input type="text" id="descrizione_iva" name="descrizione_iva"><br><br>
     </div>
     <input type="submit" value="Inserisci Fattura">
   </form>

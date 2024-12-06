@@ -1,37 +1,39 @@
 <html>
   <head>
-   <title>DB & PHP test: DELETE</title>
+   <title>DB & PHP Test: DELETE</title>
   </head>
   <body>
-	<?php
-		$connection = new mysqli("localhost", "root", "", "biblioteca");
+    <?php
+      // Connessione al database
+      $connection = new mysqli("localhost", "root", "", "fattureelettroniche");
 
-		if ($connection->connect_error) {
-			die("Errore di connessione: " . $connection->connect_error);
-		}
+      if ($connection->connect_error) {
+        die("Errore di connessione: " . $connection->connect_error);
+      }
 
-		$query = "SELECT TITOLO FROM libri ORDER BY TITOLO";
-		$result = $connection->query($query);
+      // Query per selezionare le fatture
+      $query = "SELECT NDOC FROM fatture ORDER BY NDOC";
+      $result = $connection->query($query);
 
-		if ($result->num_rows != 0) {
-	?>
-		<form action="delete.php" method="GET" ><br>
-		Libro da eliminare<br>
-		<select name="libro">
-	<?php
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				echo "<option value=\"{$row['TITOLO']}\">{$row['TITOLO']}</option>";
-			}
-	?>
-		</select><br><br>
-		<input type="submit" value="Elimina">
-		</form>
-	<?php
-		} else {
-			echo "Nessun libro &egrave; presente nel database.";
-		}
-		
-		$connection->close();
-	?>
+      if ($result->num_rows != 0) {
+    ?>
+        <form action="delete.php" method="GET" ><br>
+        Fattura da eliminare<br>
+        <select name="ndoc">
+    <?php
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+          echo "<option value=\"{$row['NDOC']}\">{$row['NDOC']}</option>";
+        }
+    ?>
+        </select><br><br>
+        <input type="submit" value="Elimina">
+        </form>
+    <?php
+      } else {
+        echo "Nessuna fattura &egrave; presente nel database.";
+      }
+
+      $connection->close();
+    ?>
   </body>
 </html>
