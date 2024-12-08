@@ -45,11 +45,11 @@
 
        //inserimento del nuovo cliente nella tabella 'tabcliente'
        $stmt_cliente = $connection->prepare("INSERT INTO tabcliente (DENOMINAZIONE, INDIRIZZO, CITTA, CAP, NAZIONE, PROVINCIA, PIVA, CF, SDI, PEC) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-       $stmt_cliente->bind_param("ssssssssss", $denominazione, $indirizzo, $citta, $cap, $nazione, $provincia, $piva, $cf, $sdi, $pec);
+       $stmt_cliente->bind_param("ssssssssss", $denominazione, $indirizzo, $citta, $cap, $nazione, $provincia, $piva, $cf, $sdi, $pec); //attraverso bind_param vengono riempiti i placeholder ?
 
        if ($stmt_cliente->execute()) {
          echo "Nuovo cliente aggiunto con successo!<br>";
-         $cliente = $stmt_cliente->insert_id; //ID del nuovo cliente
+         $cliente = $stmt_cliente->insert_id; //dopo aver eseguito la quuery si ottiene l'ID del nuovo cliente
        } else {
          echo "Errore nell'aggiunta del nuovo cliente: " . $stmt_cliente->error;
          exit();
@@ -59,7 +59,7 @@
      } else {
        //recupero l'ID del cliente esistente
        $cliente = $_GET["cliente"] ?? null;
-       if (empty($cliente)) {
+       if (empty($cliente)) { //se il valore del cliente è vuoto viene generato l'errore
          die("Errore: Nessun cliente selezionato o aggiunto.");
        }
      }
@@ -79,10 +79,10 @@
 
        if ($stmt->execute()) {
          echo "La fattura $ndoc è stata aggiunta al database!";
-         $id_doc = $stmt->insert_id;  // Ottieni l'ID della fattura appena inserita
+         $id_doc = $stmt->insert_id;  //ottieni l'ID della fattura appena inserita che poi verrà inserita nelle tabelle esterne
 
          //inserimento dei dettagli della fattura nella tabella dfatture
-         if (isset($_GET["new_iva"]) && $_GET["new_iva"] == "1") {
+         if (isset($_GET["new_iva"]) && $_GET["new_iva"] == "1") { //con isset si verifica se la variabile esista e che non contenga null e poi si verifica se il suo valore è 1
             $cod = $_GET["cod"] ?? null;
             $descrizione_iva = $_GET["descrizione_iva"] ?? null;
 

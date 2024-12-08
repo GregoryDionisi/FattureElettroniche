@@ -13,7 +13,7 @@
       die("Errore di connessione: " . $connection->connect_error);
     }
 
-    //inizio della transazione per garantire che entrambe le eliminazioni avvengano insieme
+    //inizio della transazione per garantire che entrambe le eliminazioni avvengano insieme in modo da garantire coerenza dei dati
     $connection->begin_transaction();
 
     try {
@@ -37,8 +37,8 @@
         throw new Exception("Errore nell'eliminazione della fattura: " . $stmt->error);
       }
 
-      //se tutto è andato bene, commit della transazione
-      $connection->commit();
+      //se entrambe le eliminazioni hanno successo, la transazione viene confermata, rendendo permanenti le modifiche nel database
+      $connection->commit(); //in particolare il commit è uno statement che chiude in maniera definitiva una Transazione-SQL o una semplice operazione di UPDATE all'interno di un db
       
     } catch (Exception $e) {
       //in caso di errore viene annullata la transazione
