@@ -163,7 +163,7 @@
 
 
     function aggiornaImportoRiga() {
-        const quantita = parseFloat(qtInput.value) || 0;
+        const quantita = parseFloat(qtInput.value) || 0; //converte i valori numerici in numeri float e se non sono validi assegna 0
         const importoUnitario = parseFloat(importoUnitarioInput.value) || 0;
         const importoTotale = quantita * importoUnitario;
         importoRigaInput.value = importoTotale.toFixed(2);
@@ -171,21 +171,21 @@
 
  
     qtInput.addEventListener('input', aggiornaImportoRiga);
-    importoUnitarioInput.addEventListener('input', aggiornaImportoRiga);
+    importoUnitarioInput.addEventListener('input', aggiornaImportoRiga); //aggiornano il calcolo ogni volta che l'utente modifica la quantità o l'importo unitario
 
     clienteSelect.addEventListener('change', function () {
       if (clienteSelect.value) {
-        newClienteCheckbox.checked = false;
-        clientInfo.style.display = 'none';
-        clientInputs.forEach(input => input.disabled = true);
+        newClienteCheckbox.checked = false; 
+        clientInfo.style.display = 'none'; //nasconde la sezione per i dati del nuovo cliente
+        clientInputs.forEach(input => input.disabled = true); //disabilita tutti i campi di input per i dati del nuovo cliente
       }
     });
 
     newClienteCheckbox.addEventListener('change', function () {
       if (newClienteCheckbox.checked) {
-        clienteSelect.value = '';
-        clientInfo.style.display = 'block';
-        clientInputs.forEach(input => input.disabled = false);
+        clienteSelect.value = ''; //resetta il valore del menu a tendina del cliente esistenete
+        clientInfo.style.display = 'block'; //mostra i campi per inserire i dati del nuovo cliente
+        clientInputs.forEach(input => input.disabled = false); //abilita i campi di input per consentire l'inserimento
       } else {
         clientInfo.style.display = 'none';
         clientInputs.forEach(input => input.disabled = true);
@@ -195,7 +195,7 @@
   // Gestione selezione IVA esistente
 idivaSelect.addEventListener('change', function () {
     if (idivaSelect.value) {
-        newIvaCheckbox.checked = false; // Deseleziona il checkbox
+        newIvaCheckbox.checked = false;
         ivaInfo.style.display = 'none';
         ivaInputs.forEach(input => input.disabled = true);
     }
@@ -204,7 +204,7 @@ idivaSelect.addEventListener('change', function () {
 // Gestione aggiunta nuovo tipo IVA
 newIvaCheckbox.addEventListener('change', function () {
     if (newIvaCheckbox.checked) {
-        idivaSelect.value = ''; // Deseleziona il menu a tendina
+        idivaSelect.value = '';
         ivaInfo.style.display = 'block';
         ivaInputs.forEach(input => input.disabled = false);
     } else {

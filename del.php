@@ -4,14 +4,14 @@
   </head>
   <body>
     <?php
-      // Connessione al database
+ 
       $connection = new mysqli("localhost", "root", "", "fattureelettroniche");
 
       if ($connection->connect_error) {
         die("Errore di connessione: " . $connection->connect_error);
       }
 
-      // Query per selezionare le fatture
+      //query per selezionare le fatture
       $query = "SELECT NDOC FROM fatture ORDER BY NDOC";
       $result = $connection->query($query);
 

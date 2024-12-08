@@ -4,20 +4,20 @@
  </head>
  <body>
   <?php
-    $ndoc = $_GET["ndoc"]; // Recupero il numero documento (NDOC) dalla richiesta GET
+    $ndoc = $_GET["ndoc"];
 
-    // Connessione al database
+
     $connection = new mysqli("localhost", "root", "", "FattureElettroniche");
 
     if ($connection->connect_error) {
       die("Errore di connessione: " . $connection->connect_error);
     }
 
-    // Iniziamo una transazione per garantire che entrambe le eliminazioni avvengano insieme
+    //inizio della transazione per garantire che entrambe le eliminazioni avvengano insieme
     $connection->begin_transaction();
 
     try {
-      // Eliminazione dalla tabella dfatture, basata su ID_DOC che corrisponde a NDOC
+      //eliminazione dalla tabella dfatture, basata su ID_DOC che corrisponde a NDOC
       $stmt2 = $connection->prepare("DELETE FROM dfatture WHERE ID_DOC = (SELECT ID_DOC FROM fatture WHERE NDOC = ?)");
       $stmt2->bind_param("s", $ndoc);
 
@@ -27,7 +27,7 @@
         throw new Exception("Errore nell'eliminazione dei dettagli della fattura: " . $stmt2->error);
       }
 
-      // Eliminazione dalla tabella fatture
+      //eliminazione dalla tabella fatture
       $stmt = $connection->prepare("DELETE FROM fatture WHERE NDOC = ?");
       $stmt->bind_param("s", $ndoc);
 
@@ -37,16 +37,16 @@
         throw new Exception("Errore nell'eliminazione della fattura: " . $stmt->error);
       }
 
-      // Se tutto è andato bene, commit della transazione
+      //se tutto è andato bene, commit della transazione
       $connection->commit();
       
     } catch (Exception $e) {
-      // In caso di errore, annulliamo la transazione
+      //in caso di errore viene annullata la transazione
       $connection->rollback();
       echo "Errore durante l'eliminazione: " . $e->getMessage();
     }
 
-    // Chiusura delle dichiarazioni e connessione
+    //chiusura delle dichiarazioni e connessione
     $stmt->close();
     $stmt2->close();
     $connection->close();

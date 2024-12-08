@@ -1,16 +1,16 @@
 <?php
-// Connessione al database
+
 $conn = new mysqli("localhost", "root", "", "FattureElettroniche");
 
-// Verifica connessione
+
 if ($conn->connect_error) {
     die("Errore di connessione: " . $conn->connect_error);
 }
 
-// Recupera l'ID della fattura dalla query string
+
 $id_fattura = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Query per ottenere i dettagli della fattura
+//query per ottenere i dettagli della fattura
 $sql_dettagli = "
     SELECT d.DESCRIZIONE, d.QT, d.IMPORTOUNITARIO, d.IMPORTORIGA,
            t.COD AS CodiceIVA, t.DESCRIZIONE AS DescrizioneIVA
