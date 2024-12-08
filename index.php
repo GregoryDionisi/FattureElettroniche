@@ -61,7 +61,7 @@
         echo "</tr>";
         while ($row = @ $result->fetch_array()) {
             echo "<tr onclick=\"window.location.href='fatture.php?id=" . $row[0] . "'\">";
-            echo "<td><a href='fatture.php?id=" . $row[0] . "'>$row[0]</a></td>";
+            echo "<td><a href='fatture.php?id=" . $row[0] . "'>$row[0]</a></td>"; //i punti prima e dopo vengono utilizzati in PHP per concatenare le stringhe tra di loro
             echo "<td><a href='fatture.php?id=" . $row[0] . "'>$row[1]</a></td>";
             echo "<td><a href='fatture.php?id=" . $row[0] . "'>$row[2]</a></td>";
             echo "<td><a href='fatture.php?id=" . $row[0] . "'>$row[3]</a></td>";
