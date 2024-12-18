@@ -1,14 +1,21 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatture</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
 <?php
 $conn = new mysqli("localhost", "root", "", "FattureElettroniche");
-
 if ($conn->connect_error) {
     die("Errore di connessione: " . $conn->connect_error);
 }
 
-//recupera l'ID della fattura dalla query string o imposta un valore predefinito
 $id_fattura = isset($_GET['id']) ? (int)$_GET['id'] : 1;
-
-//query per ottenere i dati della fattura principale
 $sql_fattura = "
     SELECT f.ID_DOC, f.NDOC, f.DATA, f.TIPODOC, f.TIPOPAGAMENTO, f.IDCLIENTE,
            c.DENOMINAZIONE AS Cliente, c.INDIRIZZO, c.CITTA, c.PIVA
@@ -19,22 +26,23 @@ $sql_fattura = "
 
 $result_fattura = $conn->query($sql_fattura);
 
+echo '<div class="container mx-auto mt-10 p-4">';
 if ($result_fattura->num_rows > 0) {
     $fattura = $result_fattura->fetch_assoc();
 
-    //mostra i dati della fattura
-    echo "<h1>Fattura: " . $fattura['NDOC'] . "</h1>";
-    echo "<p><strong>Data:</strong> " . $fattura['DATA'] . "</p>";
-    echo "<p><strong>Cliente:</strong> " . $fattura['Cliente'] . "</p>";
-    echo "<p><strong>Indirizzo:</strong> " . $fattura['INDIRIZZO'] . ", " . $fattura['CITTA'] . "</p>";
-    echo "<p><strong>Partita IVA:</strong> " . $fattura['PIVA'] . "</p>";
-    echo "<p><strong>Tipo Documento:</strong> " . $fattura['TIPODOC'] . "</p>";
-    echo "<p><strong>Tipo Pagamento:</strong> " . $fattura['TIPOPAGAMENTO'] . "</p>";
+    echo '<div class="card shadow-lg bg-base-100 p-6">';
+    echo '<h1 class="text-2xl font-bold mb-4">Fattura: ' . $fattura['NDOC'] . '</h1>';
+    echo '<p><strong>Data:</strong> ' . $fattura['DATA'] . '</p>';
+    echo '<p><strong>Cliente:</strong> ' . $fattura['Cliente'] . '</p>';
+    echo '<p><strong>Indirizzo:</strong> ' . $fattura['INDIRIZZO'] . ', ' . $fattura['CITTA'] . '</p>';
+    echo '<p><strong>Partita IVA:</strong> ' . $fattura['PIVA'] . '</p>';
+    echo '<p><strong>Tipo Documento:</strong> ' . $fattura['TIPODOC'] . '</p>';
+    echo '<p><strong>Tipo Pagamento:</strong> ' . $fattura['TIPOPAGAMENTO'] . '</p>';
+    echo '</div>';
 } else {
-    echo "<p>Fattura non trovata.</p>";
+    echo '<div class="alert alert-error mt-4">Fattura non trovata.</div>';
 }
 
-//recupera l'ID massimo e minimo delle fatture per i limiti
 $sql_min_max = "SELECT MIN(ID_DOC) AS MinID, MAX(ID_DOC) AS MaxID FROM fatture";
 $result_min_max = $conn->query($sql_min_max);
 $row_min_max = $result_min_max->fetch_assoc();
@@ -42,21 +50,20 @@ $row_min_max = $result_min_max->fetch_assoc();
 $min_id = $row_min_max['MinID'];
 $max_id = $row_min_max['MaxID'];
 
-//calcola gli ID per i pulsanti
 $prev_id = ($id_fattura > $min_id) ? $id_fattura - 1 : $min_id;
 $next_id = ($id_fattura < $max_id) ? $id_fattura + 1 : $max_id;
 
-//mostra i pulsanti di navigazione
-echo "<div style='margin-top: 20px;'>";
-echo "<a href='?id=$prev_id' style='padding: 10px; background: #007BFF; color: white; text-decoration: none; margin-right: 10px;'>Precedente</a>";
-echo "<a href='?id=$next_id' style='padding: 10px; background: #28A745; color: white; text-decoration: none; margin-right: 10px;'>Successivo</a>";
+echo '<div class="flex gap-4 mt-6">';
+echo '<a href="?id=' . $prev_id . '" class="btn btn-primary">Precedente</a>';
+echo '<a href="?id=' . $next_id . '" class="btn btn-success">Successivo</a>';
+echo '<a href="dfatture.php?id=' . $id_fattura . '" class="btn btn-warning">Dettagli Fattura</a>';
+echo '<a href="tabcliente.php?id=' . $fattura['IDCLIENTE'] . '" class="btn btn-secondary">Cliente</a>';
+echo '<a href="tiva.php?id=' . $id_fattura . '" class="btn btn-info">Visualizza IVA</a>';
+echo '<a href="index.php" class="btn btn-error">Uscita</a>';
+echo '</div>';
 
-//pulsanti per navigare alle tabelle esterne
-echo "<a href='dfatture.php?id=$id_fattura' style='padding: 10px; background: #FFC107; color: black; text-decoration: none; margin-right: 10px;'>Visualizza Dettagli Fattura</a>";
-echo "<a href='tabcliente.php?id=" . $fattura['IDCLIENTE'] . "' style='padding: 10px; background: #6C757D; color: white; text-decoration: none; margin-right: 10px;'>Visualizza Cliente</a>";
-echo "<a href='tiva.php?id=$id_fattura' style='padding: 10px; background: #17A2B8; color: white; text-decoration: none; margin-right: 10px;'>Visualizza IVA</a>";
-echo "<a href='index.php' style='padding: 10px; background: #f44336; color: white; text-decoration: none;'>Uscita</a>";
-echo "</div>";
-
+echo '</div>';
 $conn->close();
 ?>
+</body>
+</html>

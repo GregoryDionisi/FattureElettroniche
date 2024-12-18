@@ -1,152 +1,208 @@
-<html>
+<html lang="it">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DB & PHP Test: Inserisci Fattura Elettronica</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>Inserisci Fattura Elettronica</h1>
-  <form action="insert.php" method="GET">
-    <!-- Campi per la fattura -->
-    <label for="ndoc">Numero Fattura:</label><br>
-    <input type="text" id="ndoc" name="ndoc" required><br><br>
+<body class="bg-gray-100 font-sans">
 
-    <label for="data">Data Fattura:</label><br>
-    <input type="date" id="data" name="data" required><br><br>
+  <div class="container mx-auto p-6 bg-white shadow-md rounded-lg my-8">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Inserisci Fattura Elettronica</h1>
 
-    <!-- Gestione del Cliente: selezione esistente o nuovo -->
-    <label for="cliente">Cliente:</label><br>
-    <select id="cliente" name="cliente">
-      <option value="">-- Seleziona Cliente Esistente --</option>
-      <?php
-      // Connessione al database
+    <form action="insert.php" method="GET" class="space-y-6">
+
+      <!-- Campi per la fattura -->
+      <div class="flex flex-col">
+        <label for="ndoc" class="font-medium text-gray-700">Numero Fattura:</label>
+        <input type="text" id="ndoc" name="ndoc" required class="p-2 border border-gray-300 rounded mt-2" placeholder="Inserisci il numero della fattura">
+      </div>
+
+      <div class="flex flex-col">
+        <label for="data" class="font-medium text-gray-700">Data Fattura:</label>
+        <input type="date" id="data" name="data" required class="p-2 border border-gray-300 rounded mt-2">
+      </div>
+
+      <!-- Gestione del Cliente -->
+      <div class="flex flex-col">
+        <label for="cliente" class="font-medium text-gray-700">Cliente:</label>
+        <select id="cliente" name="cliente" class="p-2 border border-gray-300 rounded mt-2">
+          <option value="">-- Seleziona Cliente Esistente --</option>
+          <?php
+          // Connessione al database
+          $conn = new mysqli("localhost", "root", "", "fattureelettroniche");
+          if ($conn->connect_error) {
+              die("Connessione fallita: " . $conn->connect_error);
+          }
+
+          // Recupero clienti esistenti
+          $sql = "SELECT IDCLIENTE, DENOMINAZIONE FROM tabcliente ORDER BY DENOMINAZIONE";
+          $result = $conn->query($sql);
+
+          if ($result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+                  echo '<option value="' . $row['IDCLIENTE'] . '">' . htmlspecialchars($row['DENOMINAZIONE']) . '</option>';
+              }
+          } else {
+              echo '<option value="">Nessun cliente trovato</option>';
+          }
+
+          $conn->close();
+          ?>
+        </select>
+      </div>
+
+      <div class="flex items-center">
+        <input type="checkbox" id="new_cliente" name="new_cliente" value="1" class="mr-2">
+        <label for="new_cliente" class="font-medium text-gray-700">Aggiungi nuovo cliente:</label>
+      </div>
+
+      <div id="client_info" style="display: none;" class="mt-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Inserisci Dati Anagrafici del Cliente</h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex flex-col">
+            <label for="denominazione" class="font-medium text-gray-700">Denominazione:</label>
+            <input type="text" id="denominazione" name="denominazione" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="indirizzo" class="font-medium text-gray-700">Indirizzo:</label>
+            <input type="text" id="indirizzo" name="indirizzo" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="citta" class="font-medium text-gray-700">Città:</label>
+            <input type="text" id="citta" name="citta" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="cap" class="font-medium text-gray-700">CAP:</label>
+            <input type="text" id="cap" name="cap" maxlength="5" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="nazione" class="font-medium text-gray-700">Nazione:</label>
+            <input type="text" id="nazione" name="nazione" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="provincia" class="font-medium text-gray-700">Provincia:</label>
+            <input type="text" id="provincia" name="provincia" maxlength="2" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="piva" class="font-medium text-gray-700">Partita IVA:</label>
+            <input type="text" id="piva" name="piva" maxlength="11" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="cf" class="font-medium text-gray-700">Codice Fiscale:</label>
+            <input type="text" id="cf" name="cf" maxlength="16" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="sdi" class="font-medium text-gray-700">Codice SDI:</label>
+            <input type="text" id="sdi" name="sdi" maxlength="7" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+
+          <div class="flex flex-col">
+            <label for="pec" class="font-medium text-gray-700">PEC:</label>
+            <input type="email" id="pec" name="pec" maxlength="50" class="p-2 border border-gray-300 rounded mt-2">
+          </div>
+        </div>
+      </div>
+<!-- Tipo di Pagamento -->
+<div>
+  <label for="tipopagamento" class="block text-lg font-medium text-gray-700">Tipo di Pagamento:</label>
+  <select id="tipopagamento" name="tipopagamento" required class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+    <option value="Contante">Contante</option>
+    <option value="Assegno">Assegno</option>
+    <option value="Assegno Circolare">Assegno Circolare</option>
+    <option value="Bonifico Bancario">Bonifico Bancario</option>
+    <option value="Carta di Credito">Carta di Credito</option>
+    <option value="Ricevuta Bancaria">Ricevuta Bancaria</option>
+    <option value="Altro">Altro</option>
+  </select>
+</div>
+
+<!-- Dettagli Fattura -->
+<h2 class="text-2xl font-semibold text-gray-800 mt-6">Dettagli Fattura</h2>
+
+<div>
+  <label for="descrizione" class="block text-lg font-medium text-gray-700">Descrizione Prodotto/Servizio:</label>
+  <input type="text" id="descrizione" name="descrizione" required class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+</div>
+
+<div>
+  <label for="qt" class="block text-lg font-medium text-gray-700">Quantità:</label>
+  <input type="number" id="qt" name="qt" required min="1" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+</div>
+
+<div>
+  <label for="importounitario" class="block text-lg font-medium text-gray-700">Importo Unitario (€):</label>
+  <input type="number" step="0.01" id="importounitario" name="importounitario" required class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+</div>
+
+<!-- Tipo IVA -->
+<div>
+  <label for="idiva" class="block text-lg font-medium text-gray-700">Tipo IVA:</label>
+  <select id="idiva" name="idiva" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+    <option value="">-- Seleziona Tipo IVA Esistente --</option>
+    <?php
       $conn = new mysqli("localhost", "root", "", "fattureelettroniche");
       if ($conn->connect_error) {
           die("Connessione fallita: " . $conn->connect_error);
       }
 
-      // Recupero clienti esistenti
-      $sql = "SELECT IDCLIENTE, DENOMINAZIONE FROM tabcliente ORDER BY DENOMINAZIONE";
+      $sql = "SELECT ID_IVA, DESCRIZIONE FROM tiva ORDER BY DESCRIZIONE";
       $result = $conn->query($sql);
 
       if ($result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
-              echo '<option value="' . $row['IDCLIENTE'] . '">' . htmlspecialchars($row['DENOMINAZIONE']) . '</option>';
+              echo '<option value="' . $row['ID_IVA'] . '">' . htmlspecialchars($row['DESCRIZIONE']) . '</option>';
           }
       } else {
-          echo '<option value="">Nessun cliente trovato</option>';
+          echo '<option value="">Nessun tipo IVA trovato</option>';
       }
 
       $conn->close();
-      ?>
-    </select><br><br>
+    ?>
+  </select>
+</div>
 
-    <label for="new_cliente">Aggiungi nuovo cliente:</label>
-    <input type="checkbox" id="new_cliente" name="new_cliente" value="1"><br><br>
+<div class="flex items-center mt-4">
+  <input type="checkbox" id="new_iva" name="new_iva" value="1" class="mr-2">
+  <label for="new_iva" class="text-lg font-medium text-gray-700">Aggiungi nuovo tipo IVA:</label>
+</div>
 
-    <div id="client_info" style="display: none;">
-      <h3>Inserisci Dati Anagrafici del Cliente</h3>
-      <label for="denominazione">Denominazione:</label><br>
-      <input type="text" id="denominazione" name="denominazione"><br><br>
+<div>
+  <label for="importoriga" class="block text-lg font-medium text-gray-700">Importo Totale Riga (€):</label>
+  <input type="text" id="importoriga" name="importoriga" readonly class="w-full mt-2 p-2 border border-gray-300 rounded-md bg-gray-100">
+</div>
 
-      <label for="indirizzo">Indirizzo:</label><br>
-      <input type="text" id="indirizzo" name="indirizzo"><br><br>
+<!-- Nuovo Tipo IVA -->
+<div id="iva_info" style="display: none;">
+  <h3 class="text-2xl font-semibold text-gray-800 mt-6">Inserisci Nuovo Tipo IVA</h3>
 
-      <label for="citta">Città:</label><br>
-      <input type="text" id="citta" name="citta"><br><br>
+  <div>
+    <label for="cod" class="block text-lg font-medium text-gray-700">COD:</label>
+    <input type="text" id="cod" name="cod" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+  </div>
 
-      <label for="cap">CAP:</label><br>
-      <input type="text" id="cap" name="cap" maxlength="5"><br><br>
+  <div>
+    <label for="descrizione_iva" class="block text-lg font-medium text-gray-700">Descrizione:</label>
+    <input type="text" id="descrizione_iva" name="descrizione_iva" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+  </div>
+</div>
 
-      <label for="nazione">Nazione:</label><br>
-      <input type="text" id="nazione" name="nazione"><br><br>
+<!-- Submit -->
+<div class="mt-6">
+  <input type="submit" value="Inserisci Fattura" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+</div>
+    </form>
+  </div>
 
-      <label for="provincia">Provincia:</label><br>
-      <input type="text" id="provincia" name="provincia" maxlength="2"><br><br>
-
-      <label for="piva">Partita IVA:</label><br>
-      <input type="text" id="piva" name="piva" maxlength="11"><br><br>
-
-      <label for="cf">Codice Fiscale:</label><br>
-      <input type="text" id="cf" name="cf" maxlength="16"><br><br>
-
-      <label for="sdi">Codice SDI:</label><br>
-      <input type="text" id="sdi" name="sdi" maxlength="7"><br><br>
-
-      <label for="pec">PEC:</label><br>
-      <input type="email" id="pec" name="pec" maxlength="50"><br><br>
-    </div><br><br>
-
-    <label for="tipodoc">Tipo Documento:</label><br>
-    <select id="tipodoc" name="tipodoc" required>
-      <option value="1">Fattura</option>
-      <option value="2">Nota di Credito</option>
-    </select><br><br>
-
-    <label for="tipopagamento">Tipo di Pagamento:</label><br>
-    <select id="tipopagamento" name="tipopagamento" required>
-      <option value="Contante">Contante</option>
-      <option value="Assegno">Assegno</option>
-      <option value="Assegno Circolare">Assegno Circolare</option>
-      <option value="Bonifico Bancario">Bonifico Bancario</option>
-      <option value="Carta di Credito">Carta di Credito</option>
-      <option value="Ricevuta Bancaria">Ricevuta Bancaria</option>
-      <option value="Altro">Altro</option>
-    </select><br><br>
-
-    <!-- Campi per i dettagli della fattura -->
-    <h2>Dettagli Fattura</h2>
-    <label for="descrizione">Descrizione Prodotto/Servizio:</label><br>
-    <input type="text" id="descrizione" name="descrizione" required><br><br>
-
-    <label for="qt">Quantità:</label><br>
-    <input type="number" id="qt" name="qt" required min="1"><br><br>
-
-    <label for="importounitario">Importo Unitario (€):</label><br>
-    <input type="number" step="0.01" id="importounitario" name="importounitario" required><br><br>
-
-    <label for="idiva">Tipo IVA:</label><br>
-    <select id="idiva" name="idiva">
-    <option value="">-- Seleziona Tipo IVA Esistente --</option>
-  <?php
-  // Connessione al database
-  $conn = new mysqli("localhost", "root", "", "fattureelettroniche");
-  if ($conn->connect_error) {
-      die("Connessione fallita: " . $conn->connect_error);
-  }
-
-  // Recupero IVA esistenti
-  $sql = "SELECT ID_IVA, DESCRIZIONE FROM tiva ORDER BY DESCRIZIONE";
-  $result = $conn->query($sql);
-
-  if ($result->num_rows > 0) {
-      while ($row = $result->fetch_assoc()) {
-          echo '<option value="' . $row['ID_IVA'] . '">' . htmlspecialchars($row['DESCRIZIONE']) . '</option>';
-      }
-  } else {
-      echo '<option value="">Nessun tipo IVA trovato</option>';
-  }
-
-  $conn->close();
-  ?>
-</select><br><br>
-
-<label for="new_iva">Aggiungi nuovo tipo IVA:</label>
-<input type="checkbox" id="new_iva" name="new_iva" value="1"><br><br>
-
-
-    <label for="importoriga">Importo Totale Riga (€):</label><br>
-    <input type="text" id="importoriga" name="importoriga" readonly><br><br>
-
-    <div id="iva_info" style="display: none;">
-    <h3>Inserisci Nuovo Tipo IVA</h3>
-
-    <label for="cod">COD:</label><br>
-    <input type="text" id="cod" name="cod"><br><br>
-
-    <label for="descrizione_iva">Descrizione:</label><br>
-    <input type="text" id="descrizione_iva" name="descrizione_iva"><br><br>
-    </div>
-    <input type="submit" value="Inserisci Fattura">
-  </form>
 
   <script>
     const clienteSelect = document.getElementById('cliente');
@@ -172,7 +228,7 @@
  
     qtInput.addEventListener('input', aggiornaImportoRiga);
     importoUnitarioInput.addEventListener('input', aggiornaImportoRiga); //aggiornano il calcolo ogni volta che l'utente modifica la quantità o l'importo unitario
-
+      
     clienteSelect.addEventListener('change', function () {
       if (clienteSelect.value) {
         newClienteCheckbox.checked = false; 
