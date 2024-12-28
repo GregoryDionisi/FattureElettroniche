@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,12 +54,21 @@ $prev_id = ($id_fattura > $min_id) ? $id_fattura - 1 : $min_id;
 $next_id = ($id_fattura < $max_id) ? $id_fattura + 1 : $max_id;
 
 echo '<div class="flex gap-4 mt-6">';
-echo '<a href="?id=' . $prev_id . '" class="btn btn-primary">Precedente</a>';
-echo '<a href="?id=' . $next_id . '" class="btn btn-success">Successivo</a>';
+echo '<a href="?id=' . $prev_id . '" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+</svg><span>Precedente</span></a>';
+echo '<a href="?id=' . $next_id . '" class="btn btn-success"><span>Successivo</span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+</svg></a>';
 echo '<a href="dfatture.php?id=' . $id_fattura . '" class="btn btn-warning">Dettagli Fattura</a>';
 echo '<a href="tabcliente.php?id=' . $fattura['IDCLIENTE'] . '" class="btn btn-secondary">Cliente</a>';
 echo '<a href="tiva.php?id=' . $id_fattura . '" class="btn btn-info">Visualizza IVA</a>';
-echo '<a href="index.php" class="btn btn-error">Uscita</a>';
+echo '<a href="index.php" class="btn btn-outline btn-primary flex items-center space-x-2 mb-6">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  </svg>
+  <span>Indietro</span>
+</a>';
 echo '</div>';
 
 echo '</div>';

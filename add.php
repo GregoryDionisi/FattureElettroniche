@@ -1,13 +1,23 @@
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DB & PHP Test: Inserisci Fattura Elettronica</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
 
   <div class="container mx-auto p-6 bg-white shadow-md rounded-lg my-8">
+
+  <button onclick="window.history.back();" class="btn btn-outline btn-primary flex items-center space-x-2 mb-6">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+  </svg>
+  <span>Indietro</span>
+</button>
+
+
     <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Inserisci Fattura Elettronica</h1>
 
     <form action="insert.php" method="GET" class="space-y-6">
@@ -22,6 +32,16 @@
         <label for="data" class="font-medium text-gray-700">Data Fattura:</label>
         <input type="date" id="data" name="data" required class="p-2 border border-gray-300 rounded mt-2">
       </div>
+
+      <div class="flex flex-col">
+  <label for="tipodoc" class="font-medium text-gray-700">Tipo Documento:</label>
+  <select id="tipodoc" name="tipodoc" required class="p-2 border border-gray-300 rounded mt-2">
+    <option value="">-- Seleziona Tipo Documento --</option>
+    <option value="1">Fattura</option>
+    <option value="2">Nota di Credito</option>
+  </select>
+</div>
+  
 
       <!-- Gestione del Cliente -->
       <div class="flex flex-col">
@@ -129,144 +149,212 @@
 <!-- Dettagli Fattura -->
 <h2 class="text-2xl font-semibold text-gray-800 mt-6">Dettagli Fattura</h2>
 
-<div>
-  <label for="descrizione" class="block text-lg font-medium text-gray-700">Descrizione Prodotto/Servizio:</label>
-  <input type="text" id="descrizione" name="descrizione" required class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+<div id="dettagli-container">
+  <div class="dettaglio-fattura border p-4 rounded-lg mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Descrizione Prodotto/Servizio:</label>
+        <input type="text" name="descrizione[]" required class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+      </div>
+
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Quantità:</label>
+        <input type="number" name="qt[]" required min="1" class="w-full mt-2 p-2 border border-gray-300 rounded-md quantita">
+      </div>
+
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Importo Unitario (€):</label>
+        <input type="number" step="0.01" name="importounitario[]" required class="w-full mt-2 p-2 border border-gray-300 rounded-md importo-unitario">
+      </div>
+
+      <div>
+    <label class="block text-lg font-medium text-gray-700">Tipo IVA:</label>
+    <select name="idiva[]" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+        <option value="">-- Seleziona Tipo IVA --</option>
+        <option value="22">IVA 22%</option>
+        <option value="10">IVA 10%</option>
+        <option value="0">Esente IVA</option>
+    </select>
 </div>
 
-<div>
-  <label for="qt" class="block text-lg font-medium text-gray-700">Quantità:</label>
-  <input type="number" id="qt" name="qt" required min="1" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
-</div>
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Importo Totale Riga (€):</label>
+        <input type="text" name="importoriga[]" readonly class="w-full mt-2 p-2 border border-gray-300 rounded-md bg-gray-100 importo-riga">
+      </div>
 
-<div>
-  <label for="importounitario" class="block text-lg font-medium text-gray-700">Importo Unitario (€):</label>
-  <input type="number" step="0.01" id="importounitario" name="importounitario" required class="w-full mt-2 p-2 border border-gray-300 rounded-md">
-</div>
-
-<!-- Tipo IVA -->
-<div>
-  <label for="idiva" class="block text-lg font-medium text-gray-700">Tipo IVA:</label>
-  <select id="idiva" name="idiva" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
-    <option value="">-- Seleziona Tipo IVA Esistente --</option>
-    <?php
-      $conn = new mysqli("localhost", "root", "", "fattureelettroniche");
-      if ($conn->connect_error) {
-          die("Connessione fallita: " . $conn->connect_error);
-      }
-
-      $sql = "SELECT ID_IVA, DESCRIZIONE FROM tiva ORDER BY DESCRIZIONE";
-      $result = $conn->query($sql);
-
-      if ($result->num_rows > 0) {
-          while ($row = $result->fetch_assoc()) {
-              echo '<option value="' . $row['ID_IVA'] . '">' . htmlspecialchars($row['DESCRIZIONE']) . '</option>';
-          }
-      } else {
-          echo '<option value="">Nessun tipo IVA trovato</option>';
-      }
-
-      $conn->close();
-    ?>
-  </select>
-</div>
-
-<div class="flex items-center mt-4">
-  <input type="checkbox" id="new_iva" name="new_iva" value="1" class="mr-2">
-  <label for="new_iva" class="text-lg font-medium text-gray-700">Aggiungi nuovo tipo IVA:</label>
-</div>
-
-<div>
-  <label for="importoriga" class="block text-lg font-medium text-gray-700">Importo Totale Riga (€):</label>
-  <input type="text" id="importoriga" name="importoriga" readonly class="w-full mt-2 p-2 border border-gray-300 rounded-md bg-gray-100">
-</div>
-
-<!-- Nuovo Tipo IVA -->
-<div id="iva_info" style="display: none;">
-  <h3 class="text-2xl font-semibold text-gray-800 mt-6">Inserisci Nuovo Tipo IVA</h3>
-
-  <div>
-    <label for="cod" class="block text-lg font-medium text-gray-700">COD:</label>
-    <input type="text" id="cod" name="cod" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
-  </div>
-
-  <div>
-    <label for="descrizione_iva" class="block text-lg font-medium text-gray-700">Descrizione:</label>
-    <input type="text" id="descrizione_iva" name="descrizione_iva" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
+      <div class="flex items-center mt-4">
+        <button type="button" class="btn btn-error btn-sm remove-dettaglio" style="display: none;">
+          Rimuovi riga
+        </button>
+      </div>
+    </div>
   </div>
 </div>
+
+<button type="button" id="aggiungi-dettaglio" class="btn btn-secondary mt-4">
+  Aggiungi altra riga
+</button>
 
 <!-- Submit -->
-<div class="mt-6">
-  <input type="submit" value="Inserisci Fattura" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+<div class="flex justify-end mt-6">
+  <button type="submit" class="btn btn-primary">
+    Invia Fattura
+  </button>
 </div>
     </form>
   </div>
 
 
   <script>
-    const clienteSelect = document.getElementById('cliente');
-    const newClienteCheckbox = document.getElementById('new_cliente');
-    const clientInfo = document.getElementById('client_info');
-    const clientInputs = document.querySelectorAll('#client_info input');
-    const qtInput = document.getElementById('qt');
-    const importoUnitarioInput = document.getElementById('importounitario');
-    const importoRigaInput = document.getElementById('importoriga');
-    const idivaSelect = document.getElementById('idiva');
-    const newIvaCheckbox = document.getElementById('new_iva');
-    const ivaInfo = document.getElementById('iva_info');
-    const ivaInputs = document.querySelectorAll('#iva_info input');
+ document.addEventListener('DOMContentLoaded', function() {
+  // --- Elementi DOM Cliente ---
+  const clienteSelect = document.getElementById('cliente');
+  const newClienteCheckbox = document.getElementById('new_cliente');
+  const clientInfo = document.getElementById('client_info');
+  const clientInputs = document.querySelectorAll('#client_info input');
 
+  // --- Elementi DOM Dettagli Fattura ---
+  const dettagliContainer = document.getElementById('dettagli-container');
+  const aggiungiDettaglioBtn = document.getElementById('aggiungi-dettaglio');
 
-    function aggiornaImportoRiga() {
-        const quantita = parseFloat(qtInput.value) || 0; //converte i valori numerici in numeri float e se non sono validi assegna 0
-        const importoUnitario = parseFloat(importoUnitarioInput.value) || 0;
-        const importoTotale = quantita * importoUnitario;
-        importoRigaInput.value = importoTotale.toFixed(2);
+  // --- Gestione Cliente ---
+  function handleClienteSelection() {
+    if (clienteSelect.value) {
+      newClienteCheckbox.checked = false;
+      clientInfo.style.display = 'none';
+      clientInputs.forEach(input => {
+        input.disabled = true;
+        input.required = false;
+      });
     }
+  }
 
- 
-    qtInput.addEventListener('input', aggiornaImportoRiga);
-    importoUnitarioInput.addEventListener('input', aggiornaImportoRiga); //aggiornano il calcolo ogni volta che l'utente modifica la quantità o l'importo unitario
-      
-    clienteSelect.addEventListener('change', function () {
-      if (clienteSelect.value) {
-        newClienteCheckbox.checked = false; 
-        clientInfo.style.display = 'none'; //nasconde la sezione per i dati del nuovo cliente
-        clientInputs.forEach(input => input.disabled = true); //disabilita tutti i campi di input per i dati del nuovo cliente
-      }
-    });
-
-    newClienteCheckbox.addEventListener('change', function () {
-      if (newClienteCheckbox.checked) {
-        clienteSelect.value = ''; //resetta il valore del menu a tendina del cliente esistenete
-        clientInfo.style.display = 'block'; //mostra i campi per inserire i dati del nuovo cliente
-        clientInputs.forEach(input => input.disabled = false); //abilita i campi di input per consentire l'inserimento
-      } else {
-        clientInfo.style.display = 'none';
-        clientInputs.forEach(input => input.disabled = true);
-      }
-    });
-
-  // Gestione selezione IVA esistente
-idivaSelect.addEventListener('change', function () {
-    if (idivaSelect.value) {
-        newIvaCheckbox.checked = false;
-        ivaInfo.style.display = 'none';
-        ivaInputs.forEach(input => input.disabled = true);
-    }
-});
-
-// Gestione aggiunta nuovo tipo IVA
-newIvaCheckbox.addEventListener('change', function () {
-    if (newIvaCheckbox.checked) {
-        idivaSelect.value = '';
-        ivaInfo.style.display = 'block';
-        ivaInputs.forEach(input => input.disabled = false);
+  function handleNewCliente() {
+    if (newClienteCheckbox.checked) {
+      clienteSelect.value = '';
+      clientInfo.style.display = 'block';
+      clientInputs.forEach(input => {
+        input.disabled = false;
+        if (['denominazione', 'indirizzo', 'citta', 'piva'].includes(input.id)) {
+          input.required = true;
+        }
+      });
     } else {
-        ivaInfo.style.display = 'none';
-        ivaInputs.forEach(input => input.disabled = true);
+      clientInfo.style.display = 'none';
+      clientInputs.forEach(input => {
+        input.disabled = true;
+        input.required = false;
+      });
     }
+  }
+
+  // --- Gestione Dettagli Fattura ---
+  function calcolaImportoRiga(row) {
+    const quantita = parseFloat(row.querySelector('input[name="qt[]"]').value) || 0;
+    const importoUnitario = parseFloat(row.querySelector('input[name="importounitario[]"]').value) || 0;
+    const importoTotale = quantita * importoUnitario;
+    row.querySelector('input[name="importoriga[]"]').value = importoTotale.toFixed(2);
+  }
+
+  function addRowEventListeners(row) {
+    const quantitaInput = row.querySelector('input[name="qt[]"]');
+    const importoUnitarioInput = row.querySelector('input[name="importounitario[]"]');
+    const removeBtn = row.querySelector('.remove-dettaglio');
+
+    quantitaInput.addEventListener('input', () => calcolaImportoRiga(row));
+    importoUnitarioInput.addEventListener('input', () => calcolaImportoRiga(row));
+    
+    if (removeBtn) {
+      removeBtn.style.display = 'block'; // Mostra il pulsante rimuovi
+      removeBtn.addEventListener('click', () => {
+        const allRows = document.querySelectorAll('.dettaglio-fattura');
+        if (allRows.length > 1) {
+          row.remove();
+        }
+      });
+    }
+  }
+
+  function resetRow(row) {
+    row.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+      if (!input.readOnly) {
+        input.value = '';
+      } else {
+        input.value = '0.00';
+      }
+    });
+
+    row.querySelectorAll('select').forEach(select => {
+      select.selectedIndex = 0;
+    });
+  }
+
+  // Inizializza la prima riga
+  const primaRiga = document.querySelector('.dettaglio-fattura');
+  if (primaRiga) {
+    addRowEventListeners(primaRiga);
+  }
+
+  // Gestione aggiunta nuova riga
+  if (aggiungiDettaglioBtn) {
+    aggiungiDettaglioBtn.addEventListener('click', () => {
+      const primaRiga = document.querySelector('.dettaglio-fattura');
+      if (primaRiga) {
+        const nuovaRiga = primaRiga.cloneNode(true);
+        resetRow(nuovaRiga);
+        dettagliContainer.appendChild(nuovaRiga);
+        addRowEventListeners(nuovaRiga);
+      }
+    });
+  }
+
+  // Event listeners iniziali
+  clienteSelect.addEventListener('change', handleClienteSelection);
+  newClienteCheckbox.addEventListener('change', handleNewCliente);
+
+  // --- Validazione Form ---
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      let isValid = true;
+
+      // Validazione cliente
+      if (!clienteSelect.value && !newClienteCheckbox.checked) {
+        isValid = false;
+        alert('Seleziona un cliente esistente o aggiungi un nuovo cliente');
+      }
+
+      // Validazione campi obbligatori per nuovo cliente
+      if (newClienteCheckbox.checked) {
+        const requiredFields = ['denominazione', 'indirizzo', 'citta', 'piva'];
+        requiredFields.forEach(fieldId => {
+          const input = document.getElementById(fieldId);
+          if (input && !input.value.trim()) {
+            isValid = false;
+            alert(`Il campo ${fieldId} è obbligatorio per il nuovo cliente`);
+          }
+        });
+      }
+
+      // Validazione dettagli fattura
+      const dettagli = document.querySelectorAll('.dettaglio-fattura');
+      dettagli.forEach((dettaglio, index) => {
+        const descrizione = dettaglio.querySelector('input[name="descrizione[]"]');
+        const quantita = dettaglio.querySelector('input[name="qt[]"]');
+        const importoUnitario = dettaglio.querySelector('input[name="importounitario[]"]');
+        const iva = dettaglio.querySelector('select[name="idiva[]"]');
+
+        if (!descrizione.value.trim() || !quantita.value || !importoUnitario.value || !iva.value) {
+          isValid = false;
+          alert(`Completa tutti i campi obbligatori nella riga ${index + 1} dei dettagli fattura`);
+        }
+      });
+
+      if (!isValid) {
+        e.preventDefault();
+      }
+    });
+  }
 });
   </script>
 </body>

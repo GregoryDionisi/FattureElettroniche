@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +25,7 @@
 
     if (@ $result->num_rows != 0) {
         echo "<div class='overflow-x-auto'>";
+        echo "<h1 class='text-2xl font-bold mb-6'>Fatture</h1>";
         echo "<table class='table w-full border border-gray-300'>";
         echo "<thead>";
         echo "<tr class='bg-gray-200'>";
