@@ -23,7 +23,7 @@ $result_iva = $conn->query($sql_iva);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dettagli IVA</title>
+    <title>Fatture Elettroniche: Dettagli IVA</title>
     <!-- Import Tailwind CSS e DaisyUI -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />

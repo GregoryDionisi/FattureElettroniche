@@ -71,9 +71,29 @@ try {
         throw new Exception("La fattura $ndoc è già presente nel database!");
     }
 
-    // Inserimento della fattura
-    $stmt = $connection->prepare("INSERT INTO fatture (NDOC, DATA, IDCLIENTE, TIPODOC, TIPOPAGAMENTO) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssiss", $ndoc, $data, $cliente, $tipodoc, $tipopagamento);
+    // Inserimento della fattura con i dati predefiniti
+    $id_fornitore = 1;
+    $denominazione_default = "Azienda X";
+    $indirizzo_default = "Piazza Europa 19";
+    $citta_default = "Mairano";
+    $cap_default = "25030";
+    $nazione_default = "Italia";
+    $provincia_default = "BS";
+    $piva_default = "38475638564";
+    $cf_default = "QMKCLS28C52XRDIU";
+    $sdi_default = "3857463";
+    $pec_default = "aziendax@pec.it";
+
+    $stmt = $connection->prepare(
+        "INSERT INTO fatture (NDOC, DATA, IDCLIENTE, TIPODOC, TIPOPAGAMENTO, IDFORNITORE, DENOMINAZIONE, INDIRIZZO, CITTA, CAP, NAZIONE, PROVINCIA, PIVA, CF, SDI, PEC) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+    $stmt->bind_param(
+        "ssississssssssss", 
+        $ndoc, $data, $cliente, $tipodoc, $tipopagamento, $id_fornitore, $denominazione_default, 
+        $indirizzo_default, $citta_default, $cap_default, $nazione_default, $provincia_default, 
+        $piva_default, $cf_default, $sdi_default, $pec_default
+    );
 
     if (!$stmt->execute()) {
         throw new Exception("Errore nell'aggiunta della fattura: " . $stmt->error);
@@ -81,7 +101,7 @@ try {
 
     $id_doc = $stmt->insert_id;
     $stmt->close();
-    echo "La fattura $ndoc è stata aggiunta al database!<br>";
+    echo "La fattura $ndoc è stata aggiunta al database con i dati predefiniti!<br>";
 
     // Inserimento dei dettagli della fattura
     $stmt2 = $connection->prepare("INSERT INTO dfatture (ID_DOC, DESCRIZIONE, QT, IMPORTOUNITARIO, ID_IVA, IMPORTORIGA) VALUES (?, ?, ?, ?, ?, ?)");

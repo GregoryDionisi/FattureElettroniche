@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DB & PHP Test</title>
+    <title>Fatture Elettroniche</title>
     <!-- Import Tailwind CSS e DaisyUI -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,6 +32,17 @@
         echo "<th class='p-3'>ID_DOC</th>";
         echo "<th class='p-3'>NDOC</th>";
         echo "<th class='p-3'>DATA</th>";
+        echo "<th class='p-3'>IDFORNITORE</th>";
+        echo "<th class='p-3'>DENOMINAZIONE</th>";
+        echo "<th class='p-3'>INDIRIZZO</th>";
+        echo "<th class='p-3'>CITTA</th>";
+        echo "<th class='p-3'>CAP</th>";
+        echo "<th class='p-3'>NAZIONE</th>";
+        echo "<th class='p-3'>PROVINCIA</th>";
+        echo "<th class='p-3'>PIVA</th>";
+        echo "<th class='p-3'>CF</th>";
+        echo "<th class='p-3'>SDI</th>";
+        echo "<th class='p-3'>PEC</th>";
         echo "<th class='p-3'>IDCLIENTE</th>";
         echo "<th class='p-3'>TIPODOC</th>";
         echo "<th class='p-3'>TIPOPAGAMENTO</th>";
@@ -46,6 +57,17 @@
             echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[3]</a></td>";
             echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[4]</a></td>";
             echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[5]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[6]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[7]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[8]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[9]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[10]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[11]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[12]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[13]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[14]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[15]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[16]</a></td>";
             echo "</tr>";
         }
         echo "</tbody>";

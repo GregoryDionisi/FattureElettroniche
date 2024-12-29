@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DB & PHP Test: Inserisci Fattura Elettronica</title>
+  <title>Fatture Elettroniche: ADD</title>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -171,9 +171,9 @@
     <label class="block text-lg font-medium text-gray-700">Tipo IVA:</label>
     <select name="idiva[]" class="w-full mt-2 p-2 border border-gray-300 rounded-md">
         <option value="">-- Seleziona Tipo IVA --</option>
-        <option value="22">IVA 22%</option>
-        <option value="10">IVA 10%</option>
-        <option value="0">Esente IVA</option>
+        <option value="1">IVA 22%</option>
+        <option value="2">IVA 10%</option>
+        <option value="3">Esente IVA</option>
     </select>
 </div>
 
