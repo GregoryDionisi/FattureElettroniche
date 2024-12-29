@@ -46,6 +46,8 @@
         echo "<th class='p-3'>IDCLIENTE</th>";
         echo "<th class='p-3'>TIPODOC</th>";
         echo "<th class='p-3'>TIPOPAGAMENTO</th>";
+        echo "<th class='p-3'>BANCA</th>";
+        echo "<th class='p-3'>IBAN</th>";
         echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
@@ -68,6 +70,8 @@
             echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[14]</a></td>";
             echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[15]</a></td>";
             echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[16]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[17]</a></td>";
+            echo "<td class='p-3'><a href='fatture.php?id=" . $row[0] . "'>$row[18]</a></td>";
             echo "</tr>";
         }
         echo "</tbody>";

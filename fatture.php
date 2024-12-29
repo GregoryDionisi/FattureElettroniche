@@ -39,7 +39,7 @@ $next_id = $result_next->fetch_assoc()['next_id'];
 
 // Query per ottenere i dettagli della fattura corrente
 $sql_fattura = "
-    SELECT f.ID_DOC, f.NDOC, f.DATA, f.TIPODOC, f.TIPOPAGAMENTO, f.IDCLIENTE,
+    SELECT f.ID_DOC, f.NDOC, f.DATA, f.TIPODOC, f.TIPOPAGAMENTO, f.BANCA, f.IBAN, f.IDCLIENTE,
            c.DENOMINAZIONE AS Cliente, c.INDIRIZZO AS IndirizzoCliente, c.CITTA AS CittaCliente, c.PIVA AS PivaCliente,
            f.DENOMINAZIONE AS Fornitore, f.INDIRIZZO AS IndirizzoFornitore, f.CITTA AS CittaFornitore, f.PIVA AS PivaFornitore
     FROM fatture f
@@ -64,6 +64,8 @@ if ($result_fattura->num_rows > 0) {
     echo '<p><strong>Partita IVA Fornitore:</strong> ' . $fattura['PivaFornitore'] . '</p>';
     echo '<p><strong>Tipo Documento:</strong> ' . $fattura['TIPODOC'] . '</p>';
     echo '<p><strong>Tipo Pagamento:</strong> ' . $fattura['TIPOPAGAMENTO'] . '</p>';
+    echo '<p><strong>Banca:</strong> ' . $fattura['BANCA'] . '</p>';
+    echo '<p><strong>IBAN:</strong> ' . $fattura['IBAN'] . '</p>';
     echo '</div>';
 
     echo '<div class="flex gap-4 mt-6">';

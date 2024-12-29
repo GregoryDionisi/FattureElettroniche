@@ -83,16 +83,18 @@ try {
     $cf_default = "QMKCLS28C52XRDIU";
     $sdi_default = "3857463";
     $pec_default = "aziendax@pec.it";
+    $banca_default = "BTL Banca del Territorio Lombardo";
+    $iban_default = "IT60X0542811101000001234567";
 
     $stmt = $connection->prepare(
-        "INSERT INTO fatture (NDOC, DATA, IDCLIENTE, TIPODOC, TIPOPAGAMENTO, IDFORNITORE, DENOMINAZIONE, INDIRIZZO, CITTA, CAP, NAZIONE, PROVINCIA, PIVA, CF, SDI, PEC) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO fatture (NDOC, DATA, IDCLIENTE, TIPODOC, TIPOPAGAMENTO, IDFORNITORE, DENOMINAZIONE, INDIRIZZO, CITTA, CAP, NAZIONE, PROVINCIA, PIVA, CF, SDI, PEC, BANCA, IBAN) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     );
     $stmt->bind_param(
-        "ssississssssssss", 
+        "ssississssssssssss", 
         $ndoc, $data, $cliente, $tipodoc, $tipopagamento, $id_fornitore, $denominazione_default, 
         $indirizzo_default, $citta_default, $cap_default, $nazione_default, $provincia_default, 
-        $piva_default, $cf_default, $sdi_default, $pec_default
+        $piva_default, $cf_default, $sdi_default, $pec_default, $banca_default, $iban_default
     );
 
     if (!$stmt->execute()) {
