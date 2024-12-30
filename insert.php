@@ -2,7 +2,7 @@
 // Recupero i dati inviati dal form tramite GET
 $ndoc = $_GET["ndoc"] ?? null;
 $data = $_GET["data"] ?? null;
-$tipodoc = $_GET["tipodoc"] ?? null; // Valore numerico: 1 per Fattura, 2 per Nota di Credito
+$tipodoc = $_GET["tipodoc"] ?? null;
 $tipopagamento = $_GET["tipopagamento"] ?? null;
 $new_cliente = $_GET["new_cliente"] ?? null;
 
@@ -24,6 +24,40 @@ if ($connection->connect_error) {
 $connection->begin_transaction();
 
 try {
+    // Array associativo per i dati IVA
+    $iva_data = [
+        1 => ['cod' => 22, 'descrizione' => 'IVA al 22%'],
+        2 => ['cod' => 10, 'descrizione' => 'IVA al 10%'],
+        3 => ['cod' => 0, 'descrizione' => 'Esente IVA']
+    ];
+
+    // Verifica e inserimento dei dati IVA
+    foreach ($id_iva as $iva_id) {
+        if (isset($iva_data[$iva_id])) {
+            // Verifica se l'ID_IVA esiste già
+            $stmt_check = $connection->prepare("SELECT ID_IVA FROM tiva WHERE ID_IVA = ?");
+            $stmt_check->bind_param("i", $iva_id);
+            $stmt_check->execute();
+            $result = $stmt_check->get_result();
+            
+            // Se non esiste, inserisci i nuovi dati IVA
+            if ($result->num_rows == 0) {
+                $stmt_iva = $connection->prepare("INSERT INTO tiva (ID_IVA, COD, DESCRIZIONE) VALUES (?, ?, ?)");
+                $stmt_iva->bind_param("iis", 
+                    $iva_id,
+                    $iva_data[$iva_id]['cod'],
+                    $iva_data[$iva_id]['descrizione']
+                );
+                
+                if (!$stmt_iva->execute()) {
+                    throw new Exception("Errore nell'inserimento dei dati IVA: " . $stmt_iva->error);
+                }
+                $stmt_iva->close();
+            }
+            $stmt_check->close();
+        }
+    }
+
     // Gestione cliente
     if ($new_cliente == "1") {
         // Recupero i dati del nuovo cliente
