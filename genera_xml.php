@@ -47,9 +47,10 @@ $result = $stmt->get_result();
 $xml = new DOMDocument('1.0', 'UTF-8');
 $xml->formatOutput = true;
 
-// Elemento root
+// Elemento root con namespace Agenzia delle Entrate
 $root = $xml->createElement('FatturaElettronica');
-$root->setAttribute('versione', '1.0');
+$root->setAttribute('xmlns', 'http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2');
+$root->setAttribute('versione', 'FPR12');
 $xml->appendChild($root);
 
 // Dati della prima riga per informazioni principali
@@ -63,7 +64,15 @@ if ($firstRow) {
     // DatiTrasmissione
     $datiTrasmissione = $xml->createElement('DatiTrasmissione');
     $header->appendChild($datiTrasmissione);
-    $datiTrasmissione->appendChild($xml->createElement('IdentificativoTrasmittente', $firstRow['PIVA']));
+    
+    // Creazione corretta del nodo IdentificativoTrasmittente
+    $idTrasmittente = $xml->createElement('IdTrasmittente');
+    $datiTrasmissione->appendChild($idTrasmittente);
+    
+    // Aggiunta dei sottoelementi obbligatori
+    $idTrasmittente->appendChild($xml->createElement('IdPaese', 'IT'));
+    $idTrasmittente->appendChild($xml->createElement('IdCodice', $firstRow['PIVA']));
+    
     $datiTrasmissione->appendChild($xml->createElement('ProgressivoInvio', $firstRow['NDOC']));
 
     // CedentePrestatore
