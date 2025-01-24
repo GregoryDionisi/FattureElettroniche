@@ -207,6 +207,25 @@
 
   <script>
  document.addEventListener('DOMContentLoaded', function() {
+
+  const dataInput = document.getElementById('data');
+
+  //sistema per impedire di mettere una data precedente a quella odierna
+  const today = new Date();
+  const todayFormatted = today.toISOString().split('T')[0];
+  dataInput.setAttribute('min', todayFormatted);
+
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const selectedDate = dataInput.value;
+    if (selectedDate < todayFormatted) {
+      alert('La data della fattura non può essere precedente alla data odierna.');
+      e.preventDefault();
+    }
+  });
+
+
+  
+
   // --- Elementi DOM Cliente ---
   const clienteSelect = document.getElementById('cliente');
   const newClienteCheckbox = document.getElementById('new_cliente');
