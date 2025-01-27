@@ -14,7 +14,6 @@ if ($connection->connect_error) {
     die("Errore di connessione: " . $connection->connect_error);
 }
 
-// Query per recuperare tutti i dati necessari
 $query = "
     SELECT 
         f.*,
@@ -30,7 +29,9 @@ $query = "
         c.PEC as CLIENTE_PEC,
         df.*,
         t.COD as IVA_COD,
-        t.DESCRIZIONE as IVA_DESCRIZIONE
+        t.DESCRIZIONE as IVA_DESCRIZIONE,
+        f.IBAN as IBAN,
+        f.BANCA as BANCA
     FROM fatture f
     LEFT JOIN tabcliente c ON f.IDCLIENTE = c.IDCLIENTE
     LEFT JOIN dfatture df ON f.ID_DOC = df.ID_DOC
@@ -284,8 +285,8 @@ if ($firstRow) {
     $dettaglioPagamento->appendChild($xml->createElement('ModalitaPagamento', 'MP05'));
     $dettaglioPagamento->appendChild($xml->createElement('DataScadenzaPagamento', $firstRow['DATA']));
     $dettaglioPagamento->appendChild($xml->createElement('ImportoPagamento', number_format($totalDocumento, 2, '.', '')));
-    $dettaglioPagamento->appendChild($xml->createElement('IstitutoFinanziario', 'Banca di Test'));
-    $dettaglioPagamento->appendChild($xml->createElement('IBAN', 'IT72X0873511209071000880123'));
+    $dettaglioPagamento->appendChild($xml->createElement('IstitutoFinanziario', $firstRow['BANCA']));
+    $dettaglioPagamento->appendChild($xml->createElement('IBAN', $firstRow['IBAN']));
 }
 
 $result->free();
